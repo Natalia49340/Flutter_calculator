@@ -22,7 +22,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
       'Kilometr': 0.001,
       'Centymetr': 100,
       'Milimetr': 1000,
-      'Cale': 39.3701, 
+      'Cale': 39.3701,
       'Stopy': 3.28084,
       'Mile': 0.000621371,
     },
@@ -34,8 +34,8 @@ class _ConverterScreenState extends State<ConverterScreen> {
     },
     'Temperatura': {
       'Celsjusz': 1,
-      'Fahrenheit': 33.8, 
-      'Kelwin': 274.15, 
+      'Fahrenheit': 33.8,
+      'Kelwin': 274.15,
     },
     'Czas': {
       'Milisekunda': 0.001,
@@ -59,7 +59,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
     },
   };
 
-  List<String> categories = ['Masa', 'Długość','Objętość','Temperatura','Czas','Powierzchnia','Szybkość'];
+  List<String> categories = ['Masa', 'Długość', 'Objętość', 'Temperatura', 'Czas', 'Powierzchnia', 'Szybkość'];
 
   List<String> units() {
     return conversionData[selectedCategory]!.keys.toList();
@@ -69,10 +69,8 @@ class _ConverterScreenState extends State<ConverterScreen> {
     setState(() {
       convertedValues = {};
       if (sourceUnit.isNotEmpty && targetUnit.isNotEmpty) {
-        double sourceMultiplier =
-            conversionData[selectedCategory]![sourceUnit]!;
-        double targetMultiplier =
-            conversionData[selectedCategory]![targetUnit]!;
+        double sourceMultiplier = conversionData[selectedCategory]![sourceUnit]!;
+        double targetMultiplier = conversionData[selectedCategory]![targetUnit]!;
         double conversionFactor = targetMultiplier / sourceMultiplier;
         convertedValues[targetUnit] = inputValue * conversionFactor;
       }
@@ -94,70 +92,74 @@ class _ConverterScreenState extends State<ConverterScreen> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start, // Changed to start
           children: [
-            DropdownButton<String>(
-              value: selectedCategory,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedCategory = newValue!;
-                  sourceUnit = units().first;
-                  targetUnit = units().last;
-                  convert();
-                });
-              },
-              items: categories
-                  .map<DropdownMenuItem<String>>(
-                    (String value) => DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    ),
-                  )
-                  .toList(),
+            SizedBox(height: 40), // Pusty kontener
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: categories
+                    .map((String category) => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                selectedCategory = category;
+                                sourceUnit = units().first;
+                                targetUnit = units().last;
+                                convert();
+                              });
+                            },
+                            child: Text(category),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                selectedCategory == category ? Color.fromARGB(255, 169, 148, 206) : const Color.fromARGB(255, 253, 253, 253),
+                              ),
+                            ),
+                          ),
+                        ))
+                    .toList(),
+              ),
             ),
             SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownButton<String>(
-                    value: sourceUnit,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        sourceUnit = newValue!;
-                        convert();
-                      });
-                    },
-                    items: units()
-                        .map<DropdownMenuItem<String>>(
-                          (String value) => DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ),
-                SizedBox(width: 20),
-                Expanded(
-                  child: DropdownButton<String>(
-                    value: targetUnit,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        targetUnit = newValue!;
-                        convert();
-                      });
-                    },
-                    items: units()
-                        .map<DropdownMenuItem<String>>(
-                          (String value) => DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (String unit in units())
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          sourceUnit = unit;
+                          convert();
+                        });
+                      },
+                      child: Text(unit),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          sourceUnit == unit ? Color.fromARGB(255, 169, 148, 206) : const Color.fromARGB(255, 253, 253, 253),
+                        ),
+                      ),
+                    ),
+                  SizedBox(width: 20),
+                  for (String unit in units())
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          targetUnit = unit;
+                          convert();
+                        });
+                      },
+                      child: Text(unit),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          targetUnit == unit ? Color.fromARGB(255, 169, 148, 206) : const Color.fromARGB(255, 253, 253, 253),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
             SizedBox(height: 20),
             TextField(
@@ -177,7 +179,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
               if (convertedValues[unit] != null)
                 Text(
                   '$unit: ${convertedValues[unit]}',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, fontFamily: 'Nazwa_Czcionki'), // Dodane fontFamily
                 ),
           ],
         ),
