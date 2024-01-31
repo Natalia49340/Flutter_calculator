@@ -92,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
     '=',
   ];
 
-  List<String> mathFunctions = ['√', 'x²', 'x^y'];
+  List<String> mathFunctions = ['√', '³√', 'x²', 'x^y', '!', '|x|'];
   bool isLastCharacterOpenParenthesis() {
     if (userQuestion.isNotEmpty) {
       return userQuestion.characters.last == '(';
@@ -128,6 +128,13 @@ class _MyHomePageState extends State<MyHomePage> {
         userQuestion += '^2';
       } else if (function == 'x^y') {
         userQuestion += '^';
+      } else if (function == '³√') {
+        userQuestion += '^(1/3)';
+      } else if (function == '!') {
+        userQuestion += '!';
+      } else if (function == '|x|') {
+        userQuestion += 'abs(';
+        openParenthesesCount++;
       }
     });
   }
@@ -144,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mathFunctionPressed(mathFunctions[index]);
           },
           buttonText: mathFunctions[index],
-          color: Colors.orange,
+          color: Color.fromARGB(255, 46, 7, 108),
           textColor: Colors.white,
         );
       },
@@ -221,7 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             return MyButton(
                               buttonTapped: () {
                                 setState(() {
-                                  equalPressed();
+                                  equalPressed(context);
                                 });
                               },
                               buttonText: buttons[index],
@@ -263,7 +270,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             return MyButton(
                               buttonTapped: () {
                                 setState(() {
-                                  equalPressed();
+                                  equalPressed(context);
                                 });
                               },
                               buttonText: buttons[index],
@@ -324,24 +331,54 @@ class _MyHomePageState extends State<MyHomePage> {
     return false;
   }
 
-  void equalPressed() {
-    String finalQuestion = userQuestion;
-    finalQuestion = finalQuestion.replaceAll('x', '*');
-    finalQuestion = finalQuestion.replaceAll('%', '/100');
-    finalQuestion = finalQuestion.replaceAll(',', '.');
+  void equalPressed(BuildContext context) {
+    try {
+      
+      String finalQuestion = userQuestion;
+      finalQuestion = finalQuestion.replaceAll('x', '*');
+      finalQuestion = finalQuestion.replaceAll('%', '/100');
+      finalQuestion = finalQuestion.replaceAll(',', '.');
 
-    Parser p = Parser();
-    Expression exp = p.parse(finalQuestion);
-    ContextModel cm = ContextModel();
-    double eval = exp.evaluate(EvaluationType.REAL, cm);
+      Parser p = Parser();
+      Expression exp = p.parse(finalQuestion);
+      ContextModel cm = ContextModel();
+      double eval = exp.evaluate(EvaluationType.REAL, cm);
 
-    userAnswer = eval.toStringAsFixed(2);
-    userAnswer = userAnswer.replaceAll('.', ',');
-    addToHistory(finalQuestion, userAnswer);
-
-    setState(() {
+      userAnswer = eval.toStringAsFixed(2);
       userAnswer = userAnswer.replaceAll('.', ',');
-    });
+      addToHistory(finalQuestion, userAnswer);
+
+      while (openParenthesesCount > 0 || openParenthesesCount < 0) {
+        userQuestion += ')';
+        openParenthesesCount--;
+      }
+
+      setState(() {
+        userAnswer = userAnswer.replaceAll('.', ',');
+      });
+      
+    } catch (error) {
+      
+      print("Wystąpił błąd: $error");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Błąd'),
+            content: Text(
+                'Wystąpił błąd podczas przetwarzania równania. Sprawdź poprawność wprowadzonych danych.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   void addToHistory(String equation, String result) {

@@ -22,10 +22,44 @@ class _ConverterScreenState extends State<ConverterScreen> {
       'Kilometr': 0.001,
       'Centymetr': 100,
       'Milimetr': 1000,
+      'Cale': 39.3701, 
+      'Stopy': 3.28084,
+      'Mile': 0.000621371,
+    },
+    'Objętość': {
+      'Litr': 1,
+      'Mililitr': 1000,
+      'Cm sześcienny': 1000,
+      'Metr sześcienny': 0.001,
+    },
+    'Temperatura': {
+      'Celsjusz': 1,
+      'Fahrenheit': 33.8, 
+      'Kelwin': 274.15, 
+    },
+    'Czas': {
+      'Milisekunda': 0.001,
+      'Sekunda': 1,
+      'Minuta': 0.0166667,
+      'Godzina': 0.000277778,
+      'Dzień': 1.15741e-5,
+      'Tydzień': 1.65344e-6,
+    },
+    'Powierzchnia': {
+      'Akr': 0.000247105,
+      'Hektar': 1e-4,
+      'Cm kwadratowy': 10000,
+      'Metr kwadratowy': 1,
+    },
+    'Szybkość': {
+      'Metr na sekundę': 1,
+      'Metr na godzinę': 3600,
+      'Kilometr na sekundę': 0.001,
+      'Kilometr na godzinę': 3.6,
     },
   };
 
-  List<String> categories = ['Masa', 'Długość'];
+  List<String> categories = ['Masa', 'Długość','Objętość','Temperatura','Czas','Powierzchnia','Szybkość'];
 
   List<String> units() {
     return conversionData[selectedCategory]!.keys.toList();
