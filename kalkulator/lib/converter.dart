@@ -92,9 +92,9 @@ class _ConverterScreenState extends State<ConverterScreen> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start, // Changed to start
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 40), // Pusty kontener
+            SizedBox(height: 40), 
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -179,7 +179,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
               if (convertedValues[unit] != null)
                 Text(
                   '$unit: ${convertedValues[unit]}',
-                  style: TextStyle(fontSize: 20, fontFamily: 'Nazwa_Czcionki'), // Dodane fontFamily
+                  style: TextStyle(fontSize: 20, fontFamily: 'Nazwa_Czcionki'),
                 ),
           ],
         ),
